@@ -1,0 +1,134 @@
+{
+    "RU": {
+        "name": "俄罗斯",
+        "strength": 4
+    },
+    "SA": {
+        "name": "沙特",
+        "strength": 3
+    },
+    "EG": {
+        "name": "埃及",
+        "strength": 2
+    },
+    "UY": {
+        "name": "乌拉圭",
+        "strength": 6
+    },
+    "PT": {
+        "name": "葡萄牙",
+        "strength": 7
+    },
+    "ES": {
+        "name": "西班牙",
+        "strength": 4
+    },
+    "MA": {
+        "name": "摩洛哥",
+        "strength": 2
+    },
+    "IR": {
+        "name": "伊朗",
+        "strength": 3
+    },
+    "FR": {
+        "name": "法国",
+        "strength": 9
+    },
+    "AU": {
+        "name": "澳大利亚",
+        "strength": 4
+    },
+    "PE": {
+        "name": "秘鲁",
+        "strength": 2
+    },
+    "DK": {
+        "name": "丹麦",
+        "strength": 4
+    },
+    "AR": {
+        "name": "阿根廷",
+        "strength": 7
+    },
+    "IS": {
+        "name": "冰岛",
+        "strength": 9
+    },
+    "HRV": {
+        "name": "克罗地亚",
+        "strength": 3
+    },
+    "NG": {
+        "name": "尼日利亚",
+        "strength": 3
+    },
+    "BR": {
+        "name": "巴西",
+        "strength": 10
+    },
+    "CH": {
+        "name": "瑞士",
+        "strength": 4
+    },
+    "CR": {
+        "name": "哥斯达黎加",
+        "strength": 2
+    },
+    "SRB": {
+        "name": "塞尔维亚",
+        "strength": 3
+    },
+    "DE": {
+        "name": "德国",
+        "strength": 8
+    },
+    "MX": {
+        "name": "墨西哥",
+        "strength": 3
+    },
+    "SE": {
+        "name": "瑞典",
+        "strength": 5
+    },
+    "KR": {
+        "name": "韩国",
+        "strength": 5
+    },
+    "BE": {
+        "name": "比利时",
+        "strength": 5
+    },
+    "PA": {
+        "name": "巴拿马",
+        "strength": 2
+    },
+    "TN": {
+        "name": "突尼斯",
+        "strength": 3
+    },
+    "GB": {
+        "name": "英格兰",
+        "strength": 6
+    },
+    "PL": {
+        "name": "波兰",
+        "strength": 3
+    },
+    "SN": {
+        "name": "塞内加尔",
+        "strength": 2
+    },
+    "CO": {
+        "name": "哥伦比亚",
+        "strength": 4
+    },
+    "JP": {
+        "name": "日本",
+        "strength": 5
+    },
+    "CN": {
+        "name": "中国",
+        "strength": 2
+    }
+}

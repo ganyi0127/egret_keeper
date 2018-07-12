@@ -1,0 +1,25 @@
+{
+	"groups": [
+		{
+			"keys": "egret_icon_png,teamsData_json,matchsData_json",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"url": "assets/egret_icon.png",
+			"type": "image",
+			"name": "egret_icon_png"
+		},
+		{
+			"url": "config/matchsData.json",
+			"type": "json",
+			"name": "matchsData_json"
+		},
+		{
+			"url": "config/teamsData.json",
+			"type": "json",
+			"name": "teamsData_json"
+		}
+	]
+}
