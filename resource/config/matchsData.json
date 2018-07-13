@@ -1,10 +1,11 @@
 [
     {
         "id": 0,
+        "year": "2018",
         "name": "2018",
         "cn_name": "俄罗斯世界杯",
         "ranking": null,
-        "teams": {
+        "groups": {
             "A": [
                 "RU",
                 "SA",

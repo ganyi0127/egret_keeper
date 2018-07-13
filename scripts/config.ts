@@ -25,7 +25,7 @@ const config: ResourceManagerConfig = {
                     //     nameSelector: p => path.basename(p).replace(/\./gi, "_"),
                     //     groupSelector: p => "preload"
                     // }),
-                    new ExmlPlugin('debug'), // 非 EUI 项目关闭此设置
+                    // new ExmlPlugin('debug'), // 非 EUI 项目关闭此设置
                     new IncrementCompilePlugin(),
                 ]
             }

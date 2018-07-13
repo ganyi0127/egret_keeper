@@ -1,0 +1,26 @@
+class DataInstance {
+    private static instance: DataInstance
+
+    public matchs: Match[]                              //赛事模型
+    public teamMap: { [key: string]: Team }             //球队模型
+
+
+    private constructor() {
+        //加载资源
+        this.loadResource()
+    }
+    static getInstance(): DataInstance {
+        if (!DataInstance.instance) {
+            DataInstance.instance = new DataInstance() 
+        }
+        return this.instance 
+    }
+
+    /**
+     * 加载数据
+     */
+    private loadResource() {
+        this.matchs = RES.getRes("matchsData_json")                             
+        this.teamMap = RES.getRes("teamsData_json")           
+    }
+}

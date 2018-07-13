@@ -29,8 +29,15 @@
 
 class Main extends egret.DisplayObjectContainer {
 
+    menuScene = new MenuScene()
+    gameScene = new GameScene()
+
+    private isMenuShow = true
 
 
+    /**
+     * init
+     */
     public constructor() {
         super();
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
@@ -58,8 +65,8 @@ class Main extends egret.DisplayObjectContainer {
     /**
      * 更新
      */
-    private onUpdate(){
-        
+    private onUpdate() {
+
     }
 
     /**
@@ -93,14 +100,30 @@ class Main extends egret.DisplayObjectContainer {
     /**
      * 初始化配置
      */
-    private config(){
-
+    private config() {
+        var dataInstance = DataInstance.getInstance();                
     }
 
     /**
      * 创建游戏场景    
      */
     private createGameScene() {
+        this.addChild(this.gameScene)
+        this.addChild(this.menuScene)
+    }
 
+    /**
+     * 显示/关闭菜单
+     */
+    showMenu(isMenuShow: boolean) {
+        if (this.isMenuShow == isMenuShow) {
+            return
+        }
+        this.isMenuShow = isMenuShow
+
+        var y = isMenuShow ? 0 : this.stage.stageHeight
+
+        var tw = egret.Tween.get(this.menuScene)
+        tw.to({y:y},500,egret.Ease.sineOut)                
     }
 }
