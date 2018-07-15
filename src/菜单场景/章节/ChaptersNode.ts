@@ -11,7 +11,7 @@ class ChaptersNode extends egret.DisplayObjectContainer {
     public constructor() {
         super()
 
-        this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this)
+        this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this)        
         this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchBegin, this)
         this.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.onTouchMove, this)
         this.addEventListener(egret.TouchEvent.TOUCH_END, this.onTouchEnd, this)

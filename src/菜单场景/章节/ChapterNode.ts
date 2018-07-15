@@ -77,12 +77,12 @@ class ChapterNode extends egret.DisplayObjectContainer {
     private config() {
         this.bgWidth = this.stage.stageWidth * 0.8
         this.bgHeight = this.stage.stageHeight * 0.8
-        this.bgX = (this.stage.stageWidth - this.bgWidth) / 2
+        this.bgX = (this.stage.stageWidth - this.bgWidth) - 32
         this.bgY = (this.stage.stageHeight - this.bgHeight) / 2
 
         this.finalTotalWidth = this.bgWidth * 0.9
         this.finalTotalHeight = this.bgHeight - 200
-        this.finalCenterX = this.stage.stageWidth / 2
+        this.finalCenterX = this.bgX + this.bgWidth / 2
         this.finalCenterY = this.bgY + this.bgHeight - this.finalTotalHeight / 2 - 50
 
         this.finalInterval = (this.finalTotalWidth - 180) / 8
@@ -105,9 +105,23 @@ class ChapterNode extends egret.DisplayObjectContainer {
         titleLabel.font = RES.getRes("font_fnt")
         titleLabel.textAlign = egret.HorizontalAlign.LEFT
         titleLabel.text = this.match.year
-        titleLabel.x = this.bgX + 8
-        titleLabel.y = this.bgY + 8
-        this.addChild(titleLabel)        
+        var titleLabelScale = 0.8
+        titleLabel.x = this.bgX + 32
+        titleLabel.y = this.bgY + 32
+        titleLabel.scaleX = titleLabel.scaleY = titleLabelScale
+        this.addChild(titleLabel)
+
+        //显示赛事subTitle
+        var subTitleLabel = new egret.BitmapText()
+        subTitleLabel.font = RES.getRes("font_fnt")
+        subTitleLabel.textAlign = egret.HorizontalAlign.LEFT
+        subTitleLabel.verticalAlign = egret.VerticalAlign.BOTTOM
+        subTitleLabel.text = this.match.name
+        var subTitleLabelScale = 0.5
+        subTitleLabel.x = titleLabel.x + titleLabel.width + 32
+        subTitleLabel.y = this.bgY + 32
+        subTitleLabel.scaleX = subTitleLabel.scaleY = subTitleLabelScale
+        this.addChild(subTitleLabel)
 
         //添加赛事
         this.addMatchs()
@@ -117,32 +131,98 @@ class ChapterNode extends egret.DisplayObjectContainer {
      * 添加赛事
      */
     private addMatchs() {
+        //获取章节进度
+        const process = Config.getProcessOfChapter(this.match.id)
+
+        //获取中国对
+        const chinaTeam = DataInstance.getInstance().chinaTeam
+
         //创建小组赛比赛位
         for (const key in this.match.groups) {
             if (this.match.groups.hasOwnProperty(key)) {
-                var teams = this.match.groups[key]
-                
-                //获取每组中心点
-                var regularFinalPosition = this.getRegularFinalPosition(key)
+                const teams = this.match.groups[key]
 
-                //
+                //获取每组中心点
+                const regularFinalPosition = this.getRegularFinalPosition(key)
+
+                //判断左右
+                const isLeftDirection = this.getDirection(key)
+
+                //添加组名 A~H 
+                const groupLabel = new egret.BitmapText()
+                groupLabel.font = RES.getRes("font_fnt")
+                groupLabel.textAlign = egret.HorizontalAlign.CENTER
+                groupLabel.verticalAlign = egret.VerticalAlign.MIDDLE
+                groupLabel.text = key
+                const groupLabelScale = 0.5
+                const groupLabelWidth = 200
+                const groupLabelHeight = 100
+                groupLabel.x = regularFinalPosition.x + (isLeftDirection ? - 120 : 120) - groupLabelWidth / 2 * groupLabelScale
+                groupLabel.y = regularFinalPosition.y - groupLabelHeight / 2 * groupLabelScale
+                groupLabel.width = groupLabelWidth
+                groupLabel.height = groupLabelHeight
+                groupLabel.scaleX = groupLabel.scaleY = groupLabelScale
+                this.addChild(groupLabel)
 
                 //遍历每组球队
-                var teamCubeWidth: number
+                let teamCubeWidth: number
                 const teamCubeInterval = 8
-                teams.every((team, index, array) => {
-                    var teamCube = new TeamCube(Config.Final.RegularFinal)
+                teams.every((teamCode, index, array) => {
+                    const teamCube = new TeamCube(Config.Final.RegularFinal)
+                    const team = DataInstance.getInstance().teamMap[teamCode]
+                    teamCube.setTeam(team)
+                    teamCube.targetTeam = team
 
+                    //设置状态
+                    teamCube.hasWon = false
+                    if (process) {
+                        if (process.final == Config.Final.RegularFinal) {
+                            //在小组赛内                            
+                            const totalIndex = index + (key.charCodeAt(0) - "A".charCodeAt(0)) * 4
+                            const lowerIndex = process.index - (process.index % 4)
+                            const upperIndex = lowerIndex + 4
+                            if ((totalIndex >= lowerIndex) && (totalIndex < upperIndex)) {
+                                //小组赛(同组)
+                                if (process.index % 4 == index) {
+                                    //可进入比赛
+                                    teamCube.canOppose = true
+                                } else {
+                                    //不可进入比赛
+                                    teamCube.canOppose = false
+                                    //判断是否已比赛
+                                    if (process.index % 4 > index) {
+                                    } else {
+                                        teamCube.hasWon = true
+                                    }
+                                }
+                            } else {
+                                //小组赛(不同组)
+                                teamCube.canOppose = false
+                            }
+                        } else {
+                            //小组赛已过
+                            teamCube.canOppose = false
+                        }
+                    } else {
+                        //从小组赛第一位开始比赛
+                        if (index == 0) {
+                            teamCube.canOppose = true
+                        } else {
+                            teamCube.canOppose = false
+                        }
+                    }
+
+                    //记录teamCube高度
                     if (!teamCubeWidth) {
                         teamCubeWidth = teamCube.widthLength
                     }
 
-                    var deltaPoint = this.getRegularFinalOffset(index)
-                                        
+                    const deltaPoint = this.getRegularFinalOffset(index)
+
                     deltaPoint.x += regularFinalPosition.x
                     deltaPoint.y += regularFinalPosition.y
-                    teamCube.x = deltaPoint.x 
-                    teamCube.y = deltaPoint.y 
+                    teamCube.x = deltaPoint.x
+                    teamCube.y = deltaPoint.y
                     this.addChild(teamCube)
 
                     return true
@@ -150,55 +230,176 @@ class ChapterNode extends egret.DisplayObjectContainer {
             }
         }
 
-        //读取比赛位        
+        //创建八分之一赛       
+        const halfQuarterfinalMap = [0, 1, 2, 3, 4, 5, 6, 7]
+        for (const index of halfQuarterfinalMap) {
+            const position = this.getHalfQuarterfinalPosition(index)
 
+            const teamCube = new TeamCube(Config.Final.HalfQuarterfinal)
+            const team = Config.getFinalTeam(this.match.id, Config.Final.HalfQuarterfinal, index)
+            teamCube.setTeam(team)
+
+            //设置状态(八分之一决赛不需要进行比赛)
+            teamCube.canOppose = false
+            teamCube.hasWon = true
+            if (process) {
+                if (process.final == Config.Final.HalfQuarterfinal) {
+                    //在八分之一决赛内                                                                                        
+                    teamCube.hasWon = false
+                }
+            }
+
+            teamCube.x = position.x
+            teamCube.y = position.y
+            this.addChild(teamCube)
+        }
+
+        //创建四分之一赛
+        const quarterfinalMap = [0, 1, 2, 3]
+        for (const index of quarterfinalMap) {
+            const position = this.getQuarterfinalPosition(index)
+
+            const teamCube = new TeamCube(Config.Final.Quarterfinal)
+            const team = Config.getFinalTeam(this.match.id, Config.Final.Quarterfinal, index)
+            teamCube.setTeam(team)
+
+            //设置状态
+            teamCube.hasWon = true
+            teamCube.canOppose = false
+            if (process) {
+                if (process.final == Config.Final.Quarterfinal) {
+                    //在四分之一决赛内                            
+                    teamCube.hasWon = false
+                    teamCube.canOppose = true
+
+                    //读取目标队伍
+                    if (process.index == index) {
+                        const targetTeam0 = Config.getFinalTeam(this.match.id, Config.Final.HalfQuarterfinal, index * 2)
+                        const targetTeam1 = Config.getFinalTeam(this.match.id, Config.Final.HalfQuarterfinal, index * 2 + 1)
+                        if (targetTeam0.name == chinaTeam.name) {
+                            teamCube.targetTeam = targetTeam0
+                        } else {
+                            teamCube.targetTeam = targetTeam1
+                        }
+                    }
+                }
+            }
+
+            teamCube.x = position.x
+            teamCube.y = position.y
+            this.addChild(teamCube)
+        }
+
+        //创建半决赛
+        const semifinalsMap = [0, 1]
+        for (const index of semifinalsMap) {
+            const position = this.getSemifinalsPosition(index)
+
+            const teamCube = new TeamCube(Config.Final.Semifinals)
+            const team = Config.getFinalTeam(this.match.id, Config.Final.Semifinals, index)
+            teamCube.setTeam(team)
+
+            //设置状态
+            teamCube.hasWon = true
+            teamCube.canOppose = false
+            if (process) {
+                if (process.final == Config.Final.Semifinals) {
+                    //在半决赛内                            
+                    teamCube.hasWon = false
+                    teamCube.canOppose = true
+
+                    //读取目标队伍
+                    if (process.index == index) {
+                        const targetTeam0 = Config.getFinalTeam(this.match.id, Config.Final.Quarterfinal, index * 2)
+                        const targetTeam1 = Config.getFinalTeam(this.match.id, Config.Final.Quarterfinal, index * 2 + 1)
+                        if (targetTeam0.name == chinaTeam.name) {
+                            teamCube.targetTeam = targetTeam0
+                        } else {
+                            teamCube.targetTeam = targetTeam1
+                        }
+                    }
+                }
+            }
+
+            teamCube.x = position.x
+            teamCube.y = position.y
+            this.addChild(teamCube)
+        }
+
+        //创建决赛
+        const position = this.getFinalsPosition()
+        const teamCube = new TeamCube(Config.Final.Finals)
+        const team = Config.getFinalTeam(this.match.id, Config.Final.Finals, 0)
+        teamCube.setTeam(team)
+
+        //设置状态
+        teamCube.hasWon = true
+        teamCube.canOppose = false
+        if (process) {
+            if (process.final == Config.Final.Finals) {
+                //在决赛内                            
+                teamCube.hasWon = false
+                teamCube.canOppose = true
+
+                //读取目标队伍                
+                const targetTeam0 = Config.getFinalTeam(this.match.id, Config.Final.Semifinals, 0)
+                const targetTeam1 = Config.getFinalTeam(this.match.id, Config.Final.Semifinals, 1)
+                if (targetTeam0.name == chinaTeam.name) {
+                    teamCube.targetTeam = targetTeam0
+                } else {
+                    teamCube.targetTeam = targetTeam1
+                }
+            } else if (process.final == Config.Final.Champion) {
+                //已赢得世界杯
+                teamCube.isChampion = true
+            }
+        }
+
+        teamCube.x = position.x
+        teamCube.y = position.y
+        this.addChild(teamCube)
     }
 
     /**
      * 获取决赛位置
      */
     private getFinalsPosition(): egret.Point {
-        var point = new egret.Point()
-        point.x = this.stage.stageWidth / 2
-        point.y = this.bgY - 400
+        const point = new egret.Point()
+        point.x = this.finalCenterX
+        point.y = this.finalCenterY - 300
         return point
     }
 
     /**
      * 获取半决赛位置     
-     * @param key 组别     
+     * @param index 序列
      */
-    private getSemifinalsPosition(key: string): egret.Point {
-        var isLeftDirection = this.getDirection(key)
-        var point = new egret.Point()
-        point.x = this.finalCenterX + (isLeftDirection ? -this.finalInterval : this.finalInterval)
+    private getSemifinalsPosition(index: number): egret.Point {
+        const point = new egret.Point()
+        point.x = this.finalCenterX + (index == 0 ? -this.finalInterval : this.finalInterval)
         point.y = this.finalCenterY
         return point
     }
 
     /**
-     * 获取四分之一决赛
-     * @param key 组别 
-     * @param index 下标
+     * 获取四分之一决赛     
+     * @param index 序列
      */
-    private getQuarterfinalPosition(key: string, index: number): egret.Point {
-        var isLeftDirection = this.getDirection(key)
-        var point = new egret.Point()
-        point.x = this.finalCenterX + (isLeftDirection ? -this.finalInterval : this.finalInterval) * 2
-        point.y = this.finalCenterY + (index == 0 ? -this.finalTotalHeight : this.finalTotalHeight) / 2
+    private getQuarterfinalPosition(index: number): egret.Point {
+        const point = new egret.Point()
+        point.x = this.finalCenterX + (index < 2 ? -this.finalInterval : this.finalInterval) * 2
+        point.y = this.finalCenterY + (index % 2 == 0 ? -this.finalTotalHeight : this.finalTotalHeight) / 4
         return point
     }
 
     /**
-     * 获取八分之一决赛
-     * @param key 组别 
-     * @param index 下标
+     * 获取八分之一决赛     
+     * @param index 序列
      */
-    private getHalfQuarterfinalPosition(key: string, index: number): egret.Point {
-        var isLeftDirection = this.getDirection(key)
-        var point = new egret.Point()
-        point.x = this.finalCenterX + (isLeftDirection ? -this.finalInterval : this.finalInterval) * 3
-        point.y = this.finalCenterY - this.finalTotalHeight / 2 + (this.finalTotalHeight / 4) / 2 + (this.finalTotalHeight / 4) * index
+    private getHalfQuarterfinalPosition(index: number): egret.Point {
+        const point = new egret.Point()
+        point.x = this.finalCenterX + (index < 4 ? -this.finalInterval : this.finalInterval) * 3
+        point.y = this.finalCenterY - this.finalTotalHeight / 2 + this.finalTotalHeight / 8 + (this.finalTotalHeight / 4) * (index % 4)
         return point
     }
 
@@ -207,15 +408,15 @@ class ChapterNode extends egret.DisplayObjectContainer {
      * @param key 组别 
      */
     private getRegularFinalPosition(key: string): egret.Point {
-        var isLeftDirection = this.getDirection(key)
+        const isLeftDirection = this.getDirection(key)
 
-        var ascii = key.charCodeAt(0)
-        var asciiA = "A".charCodeAt(0)
-        var asciiE = "E".charCodeAt(0)
-        var firstAscii = isLeftDirection ? asciiA : asciiE
-        var delta = ascii - firstAscii
+        const ascii = key.charCodeAt(0)
+        const asciiA = "A".charCodeAt(0)
+        const asciiE = "E".charCodeAt(0)
+        const firstAscii = isLeftDirection ? asciiA : asciiE
+        const delta = ascii - firstAscii
 
-        var centerPosition = new egret.Point()
+        const centerPosition = new egret.Point()
         centerPosition.x = this.finalCenterX + (isLeftDirection ? -this.finalInterval : this.finalInterval) * 4
         centerPosition.y = this.finalCenterY - this.finalTotalHeight / 2 + (this.finalTotalHeight / 4) / 2 + (this.finalTotalHeight / 4) * delta
         return centerPosition
@@ -226,8 +427,8 @@ class ChapterNode extends egret.DisplayObjectContainer {
      * @param index 偏移 
      */
     private getRegularFinalOffset(index: number): egret.Point {
-        var delta = (this.finalTotalHeight / 8) / 2
-        var point = new egret.Point()
+        const delta = (this.finalTotalHeight / 8) / 2
+        const point = new egret.Point()
         point.x = index == 0 || index == 2 ? -delta : delta
         point.y = index == 0 || index == 1 ? -delta : delta
         return point
@@ -238,8 +439,8 @@ class ChapterNode extends egret.DisplayObjectContainer {
      * @param key 组别
      */
     private getDirection(key: string): boolean {
-        var ascii = key.charCodeAt(0)
-        var asciiA = "A".charCodeAt(0)
+        const ascii = key.charCodeAt(0)
+        const asciiA = "A".charCodeAt(0)
         return ascii - asciiA < 4
     }
 

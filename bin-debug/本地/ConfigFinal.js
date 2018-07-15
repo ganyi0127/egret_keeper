@@ -6,8 +6,13 @@ var Config;
 (function (Config) {
     /**
      * 存储赛事数据
+     *
+     * @param chapter 章节id
+     * @param final 赛事类型
+     * @param index 序列
+     * @param team 球队
      */
-    function setFinal(chapter, final, index, team) {
+    function setFinalTeam(chapter, final, index, team) {
         var key = getItemKey(chapter, final, index);
         if (team) {
             var json = JSON.stringify(team.toJSON);
@@ -17,11 +22,15 @@ var Config;
             localStorage.removeItem(key);
         }
     }
-    Config.setFinal = setFinal;
+    Config.setFinalTeam = setFinalTeam;
     /**
      * 读取赛事数据
+     * @param chapter 章节id
+     * @param final 赛事类型
+     * @param index 序列 默认值为0
      */
-    function getFinal(chapter, final, index) {
+    function getFinalTeam(chapter, final, index) {
+        if (index === void 0) { index = 0; }
         var key = getItemKey(chapter, final, index);
         var json = localStorage.getItem(key);
         if (json) {
@@ -34,9 +43,12 @@ var Config;
             return null;
         }
     }
-    Config.getFinal = getFinal;
+    Config.getFinalTeam = getFinalTeam;
     /**
      * 获取赛事item_key
+     * @param chapter 章节id
+     * @param final 赛事类型
+     * @param index 序列
      */
     function getItemKey(chapter, final, index) {
         var _chapter = chapter;

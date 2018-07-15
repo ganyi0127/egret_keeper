@@ -4,6 +4,6 @@ class Match {
     name: string
     cn_name: string
     ranking: number
-    groups: { [key: string]: Team[] }
+    groups: { [key: string]: string[] }
 }
 

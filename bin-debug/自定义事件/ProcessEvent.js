@@ -8,28 +8,31 @@ var __extends = this && this.__extends || function __extends(t, e) {
 for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
 r.prototype = e.prototype, t.prototype = new r();
 };
+/// <reference path="TeamEvent.ts" />
 var MyEvent;
 (function (MyEvent) {
-    /**
-     * TeamEvent队伍事件
-     */
-    var TeamEvent = (function (_super) {
-        __extends(TeamEvent, _super);
+    var ProcessEvent = (function (_super) {
+        __extends(ProcessEvent, _super);
         /**
          * init
          */
-        function TeamEvent(type, bubbles, cancelable) {
+        function ProcessEvent(type, bubbles, cancelable) {
             if (bubbles === void 0) { bubbles = false; }
             if (cancelable === void 0) { cancelable = false; }
-            return _super.call(this, type, bubbles, cancelable) || this;
+            var _this = _super.call(this, type, bubbles, cancelable) || this;
+            /**
+             * 判断是否为自己
+             */
+            _this.isSelf = false;
+            return _this;
         }
         /**
-         * 进入赛事事件
+         * 添加进球事件
          */
-        TeamEvent.ENTER_FINAL = "进入赛事";
-        return TeamEvent;
+        ProcessEvent.ADD_GOAL = "添加进球";
+        return ProcessEvent;
     }(egret.Event));
-    MyEvent.TeamEvent = TeamEvent;
-    __reflect(TeamEvent.prototype, "MyEvent.TeamEvent");
+    MyEvent.ProcessEvent = ProcessEvent;
+    __reflect(ProcessEvent.prototype, "MyEvent.ProcessEvent");
 })(MyEvent || (MyEvent = {}));
-//# sourceMappingURL=TeamEvent.js.map
+//# sourceMappingURL=ProcessEvent.js.map

@@ -18,6 +18,7 @@ var DataInstance = (function () {
     DataInstance.prototype.loadResource = function () {
         this.matchs = RES.getRes("matchsData_json");
         this.teamMap = RES.getRes("teamsData_json");
+        this.chinaTeam = this.teamMap["CN"];
     };
     return DataInstance;
 }());

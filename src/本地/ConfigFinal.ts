@@ -6,9 +6,13 @@ module Config {
 
     /**
      * 存储赛事数据
+     * 
+     * @param chapter 章节id 
+     * @param final 赛事类型
+     * @param index 序列     
+     * @param team 球队
      */
-    export function setFinal(chapter: number, final: Final, index: number, team?: Team) {
-
+    export function setFinalTeam(chapter: number, final: Final, index: number, team?: Team) {        
         var key = getItemKey(chapter, final, index)
 
         if (team) {
@@ -16,13 +20,16 @@ module Config {
             localStorage.setItem(key, json)
         } else {
             localStorage.removeItem(key)
-        }
+        }        
     }
 
     /**
      * 读取赛事数据
+     * @param chapter 章节id 
+     * @param final 赛事类型
+     * @param index 序列 默认值为0
      */
-    export function getFinal(chapter: number, final: Final, index: number): Team {
+    export function getFinalTeam(chapter: number, final: Final, index: number = 0): Team {
         var key = getItemKey(chapter, final, index)
 
         var json = localStorage.getItem(key)
@@ -39,8 +46,11 @@ module Config {
 
     /**
      * 获取赛事item_key
+     * @param chapter 章节id 
+     * @param final 赛事类型
+     * @param index 序列
      */
-    function getItemKey(chapter: number, final: Final, index: number): string {
+     function getItemKey(chapter: number, final: Final, index: number): string {
         var _chapter = chapter
         if (_chapter < 0) {
             _chapter = 0

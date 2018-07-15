@@ -25,6 +25,17 @@ var GameScene = (function (_super) {
     GameScene.prototype.config = function () {
     };
     GameScene.prototype.createContents = function () {
+        //添加进度
+        var processNode = new process.ProcessNode();
+        this.addChild(processNode);
+        processNode.x = this.stage.stageWidth - processNode.width - 16;
+        processNode.y = 16;
+    };
+    /**
+     * 初始化游戏
+     * @param team 目标队伍
+     */
+    GameScene.prototype.init = function (team) {
     };
     return GameScene;
 }(egret.DisplayObjectContainer));

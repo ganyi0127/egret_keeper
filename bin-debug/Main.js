@@ -78,8 +78,21 @@ var Main = (function (_super) {
      */
     function Main() {
         var _this = _super.call(this) || this;
+        /**
+         * 菜单
+         */
         _this.menuScene = new MenuScene();
+        /**
+         * 游戏模型
+         */
         _this.gameScene = new GameScene();
+        /**
+         * 判断是否显示弹窗
+         */
+        _this.isAlertShow = false;
+        /**
+         * 判断是否显示菜单
+         */
         _this.isMenuShow = true;
         _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
         return _this;
@@ -160,20 +173,77 @@ var Main = (function (_super) {
      * 创建游戏场景
      */
     Main.prototype.createGameScene = function () {
+        var _this = this;
         this.addChild(this.gameScene);
         this.addChild(this.menuScene);
+        //添加菜单按钮
+        var mbWidth = 240;
+        var mbHeight = 200;
+        var mbRadius = 16;
+        var menuButtonTexture = RES.getRes("");
+        var menuButton = new egret.Sprite();
+        menuButton.graphics.beginFill(0x05132e, 1);
+        menuButton.graphics.drawRoundRect(0, 0, mbWidth, mbHeight, mbRadius, mbRadius);
+        menuButton.x = menuButton.y = 32;
+        menuButton.width = mbWidth;
+        menuButton.height = mbHeight;
+        this.addChild(menuButton);
+        menuButton.touchEnabled = true;
+        menuButton.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            _this.showMenu(true);
+        }, this);
     };
     /**
      * 显示/关闭菜单
+     * @param isMenuShow 是否显示菜单
      */
     Main.prototype.showMenu = function (isMenuShow) {
         if (this.isMenuShow == isMenuShow) {
             return;
         }
         this.isMenuShow = isMenuShow;
-        var y = isMenuShow ? 0 : this.stage.stageHeight;
+        var x = isMenuShow ? 0 : this.stage.stageWidth;
         var tw = egret.Tween.get(this.menuScene);
-        tw.to({ y: y }, 500, egret.Ease.sineOut);
+        tw.to({ x: x }, 500, egret.Ease.sineOut);
+    };
+    /**
+     * 接受进入比赛事件
+     */
+    Main.prototype.onEnterToFinal = function (event) {
+        var _this = this;
+        if (event.code == 0) {
+            //成功
+            this.showMenu(false);
+            //进入比赛
+            this.gameScene.init(event.team);
+        }
+        else {
+            //失败
+            //添加弹窗
+            var alert_1 = getAlert(event.message);
+            this.addChild(alert_1);
+            this.isAlertShow = true;
+            //创建一个计时器对象
+            var timer = new egret.Timer(500, 5);
+            //注册事件侦听器
+            timer.addEventListener(egret.TimerEvent.TIMER, function () {
+                //开始计时
+            }, this);
+            timer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, function () {
+                //结束计时                
+                _this.removeChild(alert_1);
+                _this.isAlertShow = false;
+            }, this);
+            //开始计时
+            timer.start();
+            //添加点击取消事件
+            alert_1.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+                timer.stop();
+                //结束计时                
+                _this.removeChild(alert_1);
+                _this.isAlertShow = false;
+            }, this);
+        }
     };
     return Main;
 }(egret.DisplayObjectContainer));

@@ -1,8 +1,21 @@
 class DataInstance {
+    /**
+     * 实例
+     */
     private static instance: DataInstance
 
-    public matchs: Match[]                              //赛事模型
-    public teamMap: { [key: string]: Team }             //球队模型
+    /**
+     * 赛事模型
+     */
+    public matchs: Match[]                             
+    /**
+     * 球队模型
+     */
+    public teamMap: { [key: string]: Team }              
+    /**
+     * 中国队
+     */
+    public chinaTeam: Team          
 
 
     private constructor() {
@@ -21,6 +34,8 @@ class DataInstance {
      */
     private loadResource() {
         this.matchs = RES.getRes("matchsData_json")                             
-        this.teamMap = RES.getRes("teamsData_json")           
+        this.teamMap = RES.getRes("teamsData_json")  
+
+        this.chinaTeam = this.teamMap["CN"]         
     }
 }

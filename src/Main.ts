@@ -28,19 +28,33 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 class Main extends egret.DisplayObjectContainer {
-
+    /**
+     * 菜单
+     */
     menuScene = new MenuScene()
+
+    /**
+     * 游戏模型
+     */
     gameScene = new GameScene()
 
-    private isMenuShow = true
+    /**
+     * 判断是否显示弹窗
+     */
+    isAlertShow = false
 
+    /**
+     * 判断是否显示菜单
+     */
+    private isMenuShow = true
 
     /**
      * init
      */
     public constructor() {
         super();
-        this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
+
+        this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this)
     }
 
     private onAddToStage(event: egret.Event) {
@@ -101,7 +115,7 @@ class Main extends egret.DisplayObjectContainer {
      * 初始化配置
      */
     private config() {
-        var dataInstance = DataInstance.getInstance();                
+        var dataInstance = DataInstance.getInstance();
     }
 
     /**
@@ -110,10 +124,28 @@ class Main extends egret.DisplayObjectContainer {
     private createGameScene() {
         this.addChild(this.gameScene)
         this.addChild(this.menuScene)
+
+        //添加菜单按钮
+        const mbWidth = 240
+        const mbHeight = 200
+        const mbRadius = 16
+        const menuButtonTexture = RES.getRes("")
+        const menuButton = new egret.Sprite()
+        menuButton.graphics.beginFill(0x05132e, 1)
+        menuButton.graphics.drawRoundRect(0, 0, mbWidth, mbHeight, mbRadius, mbRadius)
+        menuButton.x = menuButton.y = 32
+        menuButton.width = mbWidth
+        menuButton.height = mbHeight
+        this.addChild(menuButton)
+        menuButton.touchEnabled = true
+        menuButton.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+            this.showMenu(true)
+        }, this)
     }
 
     /**
      * 显示/关闭菜单
+     * @param isMenuShow 是否显示菜单
      */
     showMenu(isMenuShow: boolean) {
         if (this.isMenuShow == isMenuShow) {
@@ -121,9 +153,53 @@ class Main extends egret.DisplayObjectContainer {
         }
         this.isMenuShow = isMenuShow
 
-        var y = isMenuShow ? 0 : this.stage.stageHeight
+        var x = isMenuShow ? 0 : this.stage.stageWidth
 
         var tw = egret.Tween.get(this.menuScene)
-        tw.to({y:y},500,egret.Ease.sineOut)                
+        tw.to({ x: x }, 500, egret.Ease.sineOut)
+    }
+
+    /**
+     * 接受进入比赛事件
+     */
+    onEnterToFinal(event: MyEvent.TeamEvent) {
+        if (event.code == 0) {
+            //成功
+            this.showMenu(false)
+
+            //进入比赛
+            this.gameScene.init(event.team)
+        } else {
+            //失败
+
+            //添加弹窗
+            const alert = getAlert(event.message)
+            this.addChild(alert)
+
+            this.isAlertShow = true
+
+
+            //创建一个计时器对象
+            var timer: egret.Timer = new egret.Timer(500, 5);
+            //注册事件侦听器
+            timer.addEventListener(egret.TimerEvent.TIMER, () => {
+                //开始计时
+            }, this);
+            timer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, () => {
+                //结束计时                
+                this.removeChild(alert)
+                this.isAlertShow = false
+            }, this);
+            //开始计时
+            timer.start();
+
+            //添加点击取消事件
+            alert.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
+                timer.stop()
+                //结束计时                
+                this.removeChild(alert)
+                this.isAlertShow = false
+            }, this)
+        }
     }
 }
