@@ -93,7 +93,7 @@ class ChapterNode extends egret.DisplayObjectContainer {
         //添加背景
         var bg = new egret.Shape()
         bg.graphics.lineStyle(16, 0xffffff, 0.5, false, egret.StageScaleMode.EXACT_FIT, egret.CapsStyle.NONE, egret.JointStyle.BEVEL, 0, [32, 32])
-        bg.graphics.beginFill(0x6e6e8e, 1)
+        bg.graphics.beginFill(Config.Constant.COLOR_BACKGROUND)
         bg.graphics.drawRoundRect(this.bgX, this.bgY, this.bgWidth, this.bgHeight, 128, 256)
         bg.graphics.endFill()
         this.addChild(bg)
@@ -125,6 +125,35 @@ class ChapterNode extends egret.DisplayObjectContainer {
 
         //添加赛事
         this.addMatchs()
+    }
+
+    /**
+     * 绘制线条公共方法
+     * @param from 起始点
+     * @param to 结束点
+     * @param vertical 是否垂直
+     */
+    private addLine(from: egret.Point, to: egret.Point, vertical: boolean = false) {
+
+        //线条配置
+        const lineWidth = 8
+        const lineColor = 0x1e1e1e
+        const lineAlpha = 1
+
+
+        const line = new egret.Shape()
+        line.graphics.lineStyle(lineWidth, lineColor, lineAlpha)
+        line.graphics.moveTo(from.x, from.y)
+        if (vertical) {
+            line.graphics.lineTo(to.x, from.y)
+        } else {
+            const middleX = (from.x + to.x) / 2
+            line.graphics.lineTo(middleX, from.y)
+            line.graphics.lineTo(middleX, to.y)
+        }
+        line.graphics.lineTo(to.x, to.y)
+        line.graphics.endFill()
+        this.addChild(line)
     }
 
     /**
@@ -230,11 +259,17 @@ class ChapterNode extends egret.DisplayObjectContainer {
             }
         }
 
+
         //创建八分之一赛       
         const halfQuarterfinalMap = [0, 1, 2, 3, 4, 5, 6, 7]
         for (const index of halfQuarterfinalMap) {
             const position = this.getHalfQuarterfinalPosition(index)
 
+            //绘制进度线
+            const toPosition = this.getQuarterfinalPosition(Math.floor(index / 2))
+            this.addLine(position, toPosition)
+
+            //绘制队伍
             const teamCube = new TeamCube(Config.Final.HalfQuarterfinal)
             const team = Config.getFinalTeam(this.match.id, Config.Final.HalfQuarterfinal, index)
             teamCube.setTeam(team)
@@ -258,6 +293,10 @@ class ChapterNode extends egret.DisplayObjectContainer {
         const quarterfinalMap = [0, 1, 2, 3]
         for (const index of quarterfinalMap) {
             const position = this.getQuarterfinalPosition(index)
+
+            //绘制进度线
+            const toPosition = this.getSemifinalsPosition(Math.floor(index / 2))
+            this.addLine(position, toPosition)
 
             const teamCube = new TeamCube(Config.Final.Quarterfinal)
             const team = Config.getFinalTeam(this.match.id, Config.Final.Quarterfinal, index)
@@ -294,6 +333,10 @@ class ChapterNode extends egret.DisplayObjectContainer {
         const semifinalsMap = [0, 1]
         for (const index of semifinalsMap) {
             const position = this.getSemifinalsPosition(index)
+
+            //绘制线条 
+            const toPosition = this.getFinalsPosition()
+            this.addLine(position, toPosition, true)
 
             const teamCube = new TeamCube(Config.Final.Semifinals)
             const team = Config.getFinalTeam(this.match.id, Config.Final.Semifinals, index)

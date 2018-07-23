@@ -127,19 +127,21 @@ class Main extends egret.DisplayObjectContainer {
 
         //添加菜单按钮
         const mbWidth = 240
-        const mbHeight = 200
-        const mbRadius = 16
+        const mbHeight = 180
+        const mbRadius = Config.Constant.RADIUS_BUTTON
         const menuButtonTexture = RES.getRes("")
         const menuButton = new egret.Sprite()
-        menuButton.graphics.beginFill(0x05132e, 1)
+        menuButton.graphics.beginFill(Config.Constant.COLOR_BUTTON_NORMAL)
         menuButton.graphics.drawRoundRect(0, 0, mbWidth, mbHeight, mbRadius, mbRadius)
-        menuButton.x = menuButton.y = 32
+        menuButton.x = menuButton.y = Config.Constant.EDGE
         menuButton.width = mbWidth
         menuButton.height = mbHeight
         this.addChild(menuButton)
         menuButton.touchEnabled = true
         menuButton.addEventListener(egret.TouchEvent.TOUCH_TAP, () => {
-            this.showMenu(true)
+            if (!this.gameScene.isShowAlert) {
+                this.showMenu(true)
+            }
         }, this)
     }
 
@@ -168,7 +170,7 @@ class Main extends egret.DisplayObjectContainer {
             this.showMenu(false)
 
             //进入比赛
-            this.gameScene.init(event.team)
+            this.gameScene.reload(event.team)
         } else {
             //失败
 

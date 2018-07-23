@@ -2,7 +2,9 @@
  * 弹窗
  * @param message 消息内容
  */
-function getAlert(message) {
+function getAlert(message, acceptTitle, cancelTitle) {
+    if (acceptTitle === void 0) { acceptTitle = null; }
+    if (cancelTitle === void 0) { cancelTitle = null; }
     var clientWidth = document.documentElement.clientWidth;
     var clientHeight = document.documentElement.clientHeight;
     //iphone系列比较特殊，尺寸需要翻倍
@@ -54,6 +56,52 @@ function getAlert(message) {
     titleLabel.scaleX = titleLabel.scaleY = titleLabelScale;
     bg.addChild(titleLabel);
     bg.touchEnabled = true;
+    //添加actions 
+    var hasAccept = acceptTitle == undefined;
+    var hasCancel = cancelTitle == undefined;
+    if (hasAccept) {
+        //添加accept按钮
+        var btnWidth = 240;
+        var btnHeight = 140;
+        var btnY = alertY + alertHeight - btnHeight - Config.Constant.EDGE;
+        var btnRadius = Config.Constant.RADIUS_BUTTON;
+        var btnTexture = RES.getRes("");
+        var acceptBtn = new egret.Sprite();
+        acceptBtn.graphics.beginFill(Config.Constant.COLOR_BUTTON_NORMAL);
+        acceptBtn.graphics.drawRoundRect(0, 0, btnWidth, btnHeight, btnRadius, btnRadius);
+        acceptBtn.width = btnWidth;
+        acceptBtn.height = btnHeight;
+        bg.addChild(acceptBtn);
+        acceptBtn.touchEnabled = true;
+        acceptBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+            //发送点击事件
+            var acceptEvent = new MyEvent.ButtonEvent(MyEvent.ButtonEvent.ACCEPT);
+            bg.dispatchEvent(acceptEvent);
+        }, this);
+        if (hasCancel) {
+            //添加cancel按钮                            
+            var cancelBtn = new egret.Sprite();
+            cancelBtn.graphics.beginFill(Config.Constant.COLOR_BUTTON_NORMAL);
+            cancelBtn.graphics.drawRoundRect(0, 0, btnWidth, btnHeight, btnRadius, btnRadius);
+            cancelBtn.width = btnWidth;
+            cancelBtn.height = btnHeight;
+            bg.addChild(cancelBtn);
+            cancelBtn.touchEnabled = true;
+            cancelBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
+                //发送点击事件
+                var cancelEvent = new MyEvent.ButtonEvent(MyEvent.ButtonEvent.CANCEL);
+                bg.dispatchEvent(cancelEvent);
+            }, this);
+            cancelBtn.x = clientWidth / 2 - Config.Constant.EDGE - btnWidth;
+            cancelBtn.y = btnY;
+            acceptBtn.x = clientWidth / 2 + Config.Constant.EDGE;
+            acceptBtn.y = btnY;
+        }
+        else {
+            acceptBtn.x = clientWidth / 2 - btnWidth / 2;
+            acceptBtn.y = btnY;
+        }
+    }
     return bg;
 }
 //# sourceMappingURL=AlertExtension.js.map

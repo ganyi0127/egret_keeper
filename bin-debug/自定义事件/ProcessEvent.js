@@ -8,7 +8,7 @@ var __extends = this && this.__extends || function __extends(t, e) {
 for (var i in e) e.hasOwnProperty(i) && (t[i] = e[i]);
 r.prototype = e.prototype, t.prototype = new r();
 };
-/// <reference path="TeamEvent.ts" />
+/// <reference path="MyEvent.ts" />
 var MyEvent;
 (function (MyEvent) {
     var ProcessEvent = (function (_super) {

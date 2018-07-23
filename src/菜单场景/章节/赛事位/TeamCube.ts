@@ -78,7 +78,10 @@ class TeamCube extends egret.DisplayObjectContainer {
         }
 
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this)
-        this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTap, this)
+
+        if (this.final != Config.Final.HalfQuarterfinal) {
+            this.addEventListener(egret.TouchEvent.TOUCH_TAP, this.onTap, this)
+        }
     }
 
     /**

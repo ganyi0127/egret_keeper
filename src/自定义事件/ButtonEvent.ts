@@ -1,16 +1,19 @@
-/// <reference path="MyEvent.ts" />
+/// <reference path="MyEvent.ts"/>
 module MyEvent {
-    export class ProcessEvent extends egret.Event {
+    /**
+     * 按钮事件
+     */
+    export class ButtonEvent extends egret.Event {
+        /**
+         * 点击取消事件
+         */
+        static CANCEL = "取消"
 
         /**
-         * 添加进球事件
+         * 点击接受事件
          */
-        static ADD_GOAL = "添加进球"
-
-        /**
-         * 判断是否为自己
-         */
-        isSelf = false 
+        static ACCEPT = "接受"
+        
 
         /**
          * init 

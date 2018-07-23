@@ -1,3 +1,4 @@
+///<reference path="MyEvent.ts"/>
 module MyEvent {
     /**
      * TeamEvent队伍事件
@@ -32,7 +33,7 @@ module MyEvent {
          * 消息
          */
         message: string
-        
+
         /**
          * init 
          */

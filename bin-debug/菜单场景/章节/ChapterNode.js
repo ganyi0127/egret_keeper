@@ -42,7 +42,7 @@ var ChapterNode = (function (_super) {
         //添加背景
         var bg = new egret.Shape();
         bg.graphics.lineStyle(16, 0xffffff, 0.5, false, egret.StageScaleMode.EXACT_FIT, egret.CapsStyle.NONE, egret.JointStyle.BEVEL, 0, [32, 32]);
-        bg.graphics.beginFill(0x6e6e8e, 1);
+        bg.graphics.beginFill(Config.Constant.COLOR_BACKGROUND);
         bg.graphics.drawRoundRect(this.bgX, this.bgY, this.bgWidth, this.bgHeight, 128, 256);
         bg.graphics.endFill();
         this.addChild(bg);
@@ -70,6 +70,33 @@ var ChapterNode = (function (_super) {
         this.addChild(subTitleLabel);
         //添加赛事
         this.addMatchs();
+    };
+    /**
+     * 绘制线条公共方法
+     * @param from 起始点
+     * @param to 结束点
+     * @param vertical 是否垂直
+     */
+    ChapterNode.prototype.addLine = function (from, to, vertical) {
+        if (vertical === void 0) { vertical = false; }
+        //线条配置
+        var lineWidth = 8;
+        var lineColor = 0x1e1e1e;
+        var lineAlpha = 1;
+        var line = new egret.Shape();
+        line.graphics.lineStyle(lineWidth, lineColor, lineAlpha);
+        line.graphics.moveTo(from.x, from.y);
+        if (vertical) {
+            line.graphics.lineTo(to.x, from.y);
+        }
+        else {
+            var middleX = (from.x + to.x) / 2;
+            line.graphics.lineTo(middleX, from.y);
+            line.graphics.lineTo(middleX, to.y);
+        }
+        line.graphics.lineTo(to.x, to.y);
+        line.graphics.endFill();
+        this.addChild(line);
     };
     /**
      * 添加赛事
@@ -178,6 +205,10 @@ var ChapterNode = (function (_super) {
         for (var _i = 0, halfQuarterfinalMap_1 = halfQuarterfinalMap; _i < halfQuarterfinalMap_1.length; _i++) {
             var index = halfQuarterfinalMap_1[_i];
             var position_1 = this.getHalfQuarterfinalPosition(index);
+            //绘制进度线
+            var toPosition = this.getQuarterfinalPosition(Math.floor(index / 2));
+            this.addLine(position_1, toPosition);
+            //绘制队伍
             var teamCube_1 = new TeamCube(Config.Final.HalfQuarterfinal);
             var team_1 = Config.getFinalTeam(this.match.id, Config.Final.HalfQuarterfinal, index);
             teamCube_1.setTeam(team_1);
@@ -199,6 +230,9 @@ var ChapterNode = (function (_super) {
         for (var _a = 0, quarterfinalMap_1 = quarterfinalMap; _a < quarterfinalMap_1.length; _a++) {
             var index = quarterfinalMap_1[_a];
             var position_2 = this.getQuarterfinalPosition(index);
+            //绘制进度线
+            var toPosition = this.getSemifinalsPosition(Math.floor(index / 2));
+            this.addLine(position_2, toPosition);
             var teamCube_2 = new TeamCube(Config.Final.Quarterfinal);
             var team_2 = Config.getFinalTeam(this.match.id, Config.Final.Quarterfinal, index);
             teamCube_2.setTeam(team_2);
@@ -232,6 +266,9 @@ var ChapterNode = (function (_super) {
         for (var _b = 0, semifinalsMap_1 = semifinalsMap; _b < semifinalsMap_1.length; _b++) {
             var index = semifinalsMap_1[_b];
             var position_3 = this.getSemifinalsPosition(index);
+            //绘制线条 
+            var toPosition = this.getFinalsPosition();
+            this.addLine(position_3, toPosition, true);
             var teamCube_3 = new TeamCube(Config.Final.Semifinals);
             var team_3 = Config.getFinalTeam(this.match.id, Config.Final.Semifinals, index);
             teamCube_3.setTeam(team_3);

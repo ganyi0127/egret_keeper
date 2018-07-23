@@ -27,5 +27,5 @@ module Config {
          * 冠军
          */
         Champion
-    }
+    }    
 }

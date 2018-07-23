@@ -100,8 +100,8 @@ class ChaptersNode extends egret.DisplayObjectContainer {
             return
         }
 
-        var firstChapterNode = this.list[0]
-        var lastChapterNode = this.list[this.list.length - 1]
+        const firstChapterNode = this.list[0]
+        const lastChapterNode = this.list[this.list.length - 1]
 
         //回弹
         if (firstChapterNode.y < 0 || lastChapterNode.y > 0) {

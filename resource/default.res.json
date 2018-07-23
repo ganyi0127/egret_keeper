@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "egret_icon_png,teamsData_json,matchsData_json,font_fnt,font_png,flag_json",
+			"keys": "egret_icon_png,teamsData_json,matchsData_json,font_fnt,font_png,flag_json,bg_game_png,door_png",
 			"name": "preload"
 		}
 	],
@@ -36,6 +36,16 @@
 			"type": "sheet",
 			"url": "assets/flag.json",
 			"subkeys": "中国,丹麦,乌拉圭,伊朗,俄罗斯,克罗地亚,冰岛,哥伦比亚,哥斯达黎加,埃及,塞内加尔,塞尔维亚,尼日利亚,巴拿马,巴西,德国,摩洛哥,日本,比利时,沙特,法国,波兰,澳大利亚,瑞典,瑞士,秘鲁,突尼斯,英格兰,葡萄牙,西班牙,阿根廷,韩国,墨西哥"
+		},
+		{
+			"name": "bg_game_png",
+			"type": "image",
+			"url": "assets/bg_game.png"
+		},
+		{
+			"name": "door_png",
+			"type": "image",
+			"url": "assets/door.png"
 		}
 	]
 }

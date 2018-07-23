@@ -48,7 +48,9 @@ var TeamCube = (function (_super) {
                 break;
         }
         _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
-        _this.addEventListener(egret.TouchEvent.TOUCH_TAP, _this.onTap, _this);
+        if (_this.final != Config.Final.HalfQuarterfinal) {
+            _this.addEventListener(egret.TouchEvent.TOUCH_TAP, _this.onTap, _this);
+        }
         return _this;
     }
     /**

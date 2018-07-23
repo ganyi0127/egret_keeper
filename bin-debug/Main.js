@@ -178,19 +178,21 @@ var Main = (function (_super) {
         this.addChild(this.menuScene);
         //添加菜单按钮
         var mbWidth = 240;
-        var mbHeight = 200;
-        var mbRadius = 16;
+        var mbHeight = 180;
+        var mbRadius = Config.Constant.RADIUS_BUTTON;
         var menuButtonTexture = RES.getRes("");
         var menuButton = new egret.Sprite();
-        menuButton.graphics.beginFill(0x05132e, 1);
+        menuButton.graphics.beginFill(Config.Constant.COLOR_BUTTON_NORMAL);
         menuButton.graphics.drawRoundRect(0, 0, mbWidth, mbHeight, mbRadius, mbRadius);
-        menuButton.x = menuButton.y = 32;
+        menuButton.x = menuButton.y = Config.Constant.EDGE;
         menuButton.width = mbWidth;
         menuButton.height = mbHeight;
         this.addChild(menuButton);
         menuButton.touchEnabled = true;
         menuButton.addEventListener(egret.TouchEvent.TOUCH_TAP, function () {
-            _this.showMenu(true);
+            if (!_this.gameScene.isShowAlert) {
+                _this.showMenu(true);
+            }
         }, this);
     };
     /**
@@ -215,7 +217,7 @@ var Main = (function (_super) {
             //成功
             this.showMenu(false);
             //进入比赛
-            this.gameScene.init(event.team);
+            this.gameScene.reload(event.team);
         }
         else {
             //失败

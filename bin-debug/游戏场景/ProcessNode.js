@@ -43,6 +43,11 @@ var process;
             this.graphics.beginFill(0xeeeeee, 1);
             this.graphics.drawRoundRect(0, 0, this.width, this.height, this.radius, this.radius);
             this.graphics.endFill();
+            //创建遮罩
+            this.maskNode = new egret.Shape();
+            this.maskNode.graphics.drawRect(0, 0, this.width, this.height);
+            this.addChild(this.maskNode);
+            this.mask = this.maskNode;
         };
         return ProcessNode;
     }(egret.Sprite));
