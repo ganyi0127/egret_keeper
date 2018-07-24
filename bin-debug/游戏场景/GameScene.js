@@ -19,16 +19,29 @@ var GameScene = (function (_super) {
          * 是否已显示弹窗
          */
         _this.isShowAlert = false;
-        _this.config();
+        /**
+         * 存储提示区域
+         */
+        _this.areaList = [];
+        /**
+         * 存储已选中区域序列 默认4 中间区域
+         */
+        _this.doorIndex = 4;
         _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
         return _this;
     }
     GameScene.prototype.onAddToStage = function (event) {
+        this.config();
         this.createContents();
     };
     GameScene.prototype.config = function () {
+        this.doorX = this.stage.stageWidth * 0.1;
+        this.doorY = this.stage.stageHeight * 0.2;
+        this.doorWidth = this.stage.stageWidth - this.doorX * 2;
+        this.doorHeight = this.stage.stageHeight - this.doorY * 2;
     };
     GameScene.prototype.createContents = function () {
+        var _this = this;
         //添加背景
         var bgTexture = RES.getRes("bg_game_png");
         var bg = new egret.Bitmap(bgTexture);
@@ -38,13 +51,36 @@ var GameScene = (function (_super) {
         this.addChild(shooter);
         //添加守门员
         var keeper = new Player.keeper();
+        keeper.x = this.stage.stageWidth / 2;
+        keeper.y = this.stage.stageHeight * 0.8;
         this.addChild(keeper);
         //添加门框
         var doorTexture = RES.getRes("door_png");
         var door = new egret.Bitmap(doorTexture);
         this.addChild(door);
+        //添加点击区域
+        var areaWidth = this.doorWidth / 3;
+        var areaHeight = this.doorHeight / 3;
+        for (var i = 0; i < 9; i++) {
+            var areaX = this.doorX + this.doorWidth / 3 * (i % 3);
+            var areaY = this.doorY + this.doorHeight / 3 * Math.floor(i / 3);
+            var area = new Area(i, areaWidth, areaHeight);
+            area.x = areaX;
+            area.y = areaY;
+            area.touchEnabled = true;
+            this.areaList.push(area);
+            this.addChild(area);
+            //添加点击事件
+            area.addEventListener(egret.TouchEvent.TOUCH_TAP, function (event) {
+                var area = event.target;
+                area.flash();
+                //存储点击序列
+                _this.doorIndex = area.index;
+            }, this);
+        }
         //添加进度
         var processNode = new process.ProcessNode();
+        processNode.initData(4, 10);
         this.addChild(processNode);
         processNode.x = this.stage.stageWidth - processNode.width - Config.Constant.EDGE;
         processNode.y = Config.Constant.EDGE;
@@ -84,6 +120,11 @@ var GameScene = (function (_super) {
             this.targetTeam = targetTeam;
             //开始
             this.restart();
+        }
+        //提示点击区域
+        for (var _i = 0, _a = this.areaList; _i < _a.length; _i++) {
+            var area = _a[_i];
+            area.flash();
         }
     };
     /**

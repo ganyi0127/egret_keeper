@@ -105,7 +105,7 @@ var ChapterNode = (function (_super) {
         var _this = this;
         //获取章节进度
         var process = Config.getProcessOfChapter(this.match.id);
-        //获取中国对
+        //获取中国队(弃用)
         var chinaTeam = DataInstance.getInstance().chinaTeam;
         var _loop_1 = function (key) {
             if (this_1.match.groups.hasOwnProperty(key)) {

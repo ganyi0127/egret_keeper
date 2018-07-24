@@ -1,14 +1,44 @@
 class GameScene extends egret.DisplayObjectContainer {
 
     /**
+     * 是否已显示弹窗
+     */
+    isShowAlert = false
+
+    /**
      * 目标队伍
      */
     private targetTeam?: Team
 
     /**
-     * 是否已显示弹窗
+     * 存储提示区域
      */
-    isShowAlert = false
+    private areaList: Area[] = []
+
+    /**
+     * 球门x坐标
+     */
+    private doorX: number
+
+    /**
+     * 球门y坐标
+     */
+    private doorY: number
+
+    /**
+     * 球门宽
+     */
+    private doorWidth: number
+
+    /**
+     * 球门高
+     */
+    private doorHeight: number
+
+    /**
+     * 存储已选中区域序列 默认4 中间区域
+     */
+    private doorIndex = 4
 
     /**
      * init
@@ -16,16 +46,19 @@ class GameScene extends egret.DisplayObjectContainer {
     public constructor() {
         super();
 
-        this.config();
         this.addEventListener(egret.Event.ADDED_TO_STAGE, this.onAddToStage, this);
     }
 
     private onAddToStage(event: egret.Event) {
+        this.config();
         this.createContents();
     }
 
     private config() {
-
+        this.doorX = this.stage.stageWidth * 0.1
+        this.doorY = this.stage.stageHeight * 0.2
+        this.doorWidth = this.stage.stageWidth - this.doorX * 2
+        this.doorHeight = this.stage.stageHeight - this.doorY * 2
     }
 
     private createContents() {
@@ -40,12 +73,39 @@ class GameScene extends egret.DisplayObjectContainer {
 
         //添加守门员
         const keeper = new Player.keeper()
+        keeper.x = this.stage.stageWidth / 2
+        keeper.y = this.stage.stageHeight * 0.8
         this.addChild(keeper)
 
         //添加门框
         const doorTexture = RES.getRes("door_png")
         const door = new egret.Bitmap(doorTexture)
         this.addChild(door)
+
+        //添加点击区域
+        const areaWidth = this.doorWidth / 3
+        const areaHeight = this.doorHeight / 3
+        for (let i = 0; i < 9; i++) {
+            const areaX = this.doorX + this.doorWidth / 3 * (i % 3)
+            const areaY = this.doorY + this.doorHeight / 3 * Math.floor(i / 3)
+
+            const area = new Area(i, areaWidth, areaHeight)
+            area.x = areaX
+            area.y = areaY
+            area.touchEnabled = true
+            this.areaList.push(area)
+            this.addChild(area)
+
+            //添加点击事件
+            area.addEventListener(egret.TouchEvent.TOUCH_TAP, (event) => {
+                const area: Area = event.target
+                area.flash()
+
+                //存储点击序列
+                this.doorIndex = area.index
+            }, this)
+        }
+
 
         //添加进度
         const processNode = new process.ProcessNode()
@@ -91,6 +151,11 @@ class GameScene extends egret.DisplayObjectContainer {
             this.targetTeam = targetTeam
             //开始
             this.restart()
+        }
+
+        //提示点击区域
+        for (const area of this.areaList) {
+            area.flash()
         }
     }
 

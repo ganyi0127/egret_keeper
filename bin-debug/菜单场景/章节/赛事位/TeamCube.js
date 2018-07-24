@@ -80,6 +80,7 @@ var TeamCube = (function (_super) {
         var mask = new egret.Shape();
         mask.graphics.beginFill(0x000000, 1);
         mask.graphics.drawRoundRect(maskX, maskY, maskWidth, maskHeight, maskRadius, maskRadius);
+        mask.graphics.endFill();
         this.addChild(mask);
         this.logoMask = mask;
         //设置logo

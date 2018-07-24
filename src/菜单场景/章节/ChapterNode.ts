@@ -163,7 +163,7 @@ class ChapterNode extends egret.DisplayObjectContainer {
         //获取章节进度
         const process = Config.getProcessOfChapter(this.match.id)
 
-        //获取中国对
+        //获取中国队(弃用)
         const chinaTeam = DataInstance.getInstance().chinaTeam
 
         //创建小组赛比赛位

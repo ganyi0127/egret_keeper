@@ -26,7 +26,11 @@ var Player;
             _super.prototype.config.call(this);
         };
         keeper.prototype.createContents = function () {
-            _super.prototype.config.call(this);
+            _super.prototype.createContents.call(this);
+            //获取骨骼
+            var armature = Config.getArmature("Rooster_Ani");
+            this.addChild(armature.getDisplay());
+            armature.animation.gotoAndPlay("rooster_idle_anim");
         };
         keeper.prototype.changeTeam = function (team) {
             _super.prototype.changeTeam.call(this, team);

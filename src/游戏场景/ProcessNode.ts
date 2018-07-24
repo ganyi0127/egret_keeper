@@ -72,6 +72,7 @@ module process {
             //创建遮罩
             this.maskNode = new egret.Shape()
             this.maskNode.graphics.drawRect(0, 0, this.width, this.height)
+            this.maskNode.cacheAsBitmap = true
             this.addChild(this.maskNode)
 
             this.mask = this.maskNode
@@ -83,12 +84,14 @@ module process {
          * 刷新遮罩
          */
         private updateMask() {
-            if (this.maxCount == 0) {
-                return
-            }
-            const targetWidth = this.width * this.curCount / this.maxCount
-
             const tw = egret.Tween.get(this.mask)
+            let targetWidth:number
+            if (this.maxCount == 0) {
+                targetWidth = 0 
+            } else {
+                targetWidth = this.width * this.curCount / this.maxCount
+            }
+            
             tw.to({ "width": targetWidth }, 500, egret.Ease.elasticIn)
         }
 
@@ -99,7 +102,7 @@ module process {
          */
         initData(targetCount: number, maxCount: number) {
             this.targetCount = targetCount
-            this.maxCount = maxCount            
+            this.maxCount = maxCount
         }
 
 
@@ -112,15 +115,15 @@ module process {
             if (this.curCount > this.maxCount) {
                 this.curCount = this.maxCount
             }
-            
+
             this.updateMask()
         }
 
         /**
          * 重置
          */
-        reset(){
-            this.curCount = 0 
+        reset() {
+            this.curCount = 0
             this.updateMask()
         }
     }

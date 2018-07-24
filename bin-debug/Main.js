@@ -194,6 +194,10 @@ var Main = (function (_super) {
                 _this.showMenu(true);
             }
         }, this);
+        Session.getList(0, function (event) {
+            var loader = event.target;
+            console.log("response: %s", loader.data);
+        }, this);
     };
     /**
      * 显示/关闭菜单

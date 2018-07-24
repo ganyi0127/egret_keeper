@@ -1,7 +1,7 @@
 {
 	"groups": [
 		{
-			"keys": "egret_icon_png,teamsData_json,matchsData_json,font_fnt,font_png,flag_json,bg_game_png,door_png",
+			"keys": "egret_icon_png,teamsData_json,matchsData_json,font_fnt,font_png,flag_json,bg_game_png,door_png,Rooster_Ani_ske_json,Rooster_Ani_tex_json,Rooster_Ani_tex_png",
 			"name": "preload"
 		}
 	],
@@ -46,6 +46,21 @@
 			"name": "door_png",
 			"type": "image",
 			"url": "assets/door.png"
+		},
+		{
+			"name": "Rooster_Ani_ske_json",
+			"type": "json",
+			"url": "assets/Rooster_Ani_ske.json"
+		},
+		{
+			"name": "Rooster_Ani_tex_json",
+			"type": "json",
+			"url": "assets/Rooster_Ani_tex.json"
+		},
+		{
+			"name": "Rooster_Ani_tex_png",
+			"type": "image",
+			"url": "assets/Rooster_Ani_tex.png"
 		}
 	]
 }

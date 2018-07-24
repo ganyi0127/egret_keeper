@@ -143,6 +143,11 @@ class Main extends egret.DisplayObjectContainer {
                 this.showMenu(true)
             }
         }, this)
+
+        Session.getList(0, (event) => {
+            const loader = <egret.URLLoader>event.target
+            console.log("response: %s",loader.data);
+        }, this)
     }
 
     /**
