@@ -3,9 +3,9 @@ var Session;
     var host = "http://localhost:8082";
     /**
      * 获取排行榜
-     * @param page 分页
+     * @param {number} page 分页
      * @param onCompleted 完成回调
-     * @param thisObject
+     * @param {any} thisObject
      */
     function getList(page, onCompleted, thisObject) {
         var url = host + "/list";
@@ -14,11 +14,9 @@ var Session;
         loader.dataFormat = egret.URLLoaderDataFormat.TEXT;
         var request = new egret.URLRequest(url);
         request.method = egret.URLRequestMethod.POST;
-        request.requestHeaders = [
-            new egret.URLRequestHeader("Content-type", "application/json;charset=UTF-8")
-        ];
-        var dataStr = "{offset:" + page + "}";
-        var data = JSON.stringify(dataStr);
+        // const header = new egret.URLRequestHeader("Content-type", "application/x-www-form-urlencoded")
+        // request.requestHeaders.push(header)
+        var dataStr = "offset=" + page + "&limit=" + 20;
         request.data = new egret.URLVariables(dataStr);
         loader.load(request);
     }
